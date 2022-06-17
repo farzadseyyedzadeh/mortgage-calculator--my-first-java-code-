@@ -22,7 +22,7 @@ public class App {
         double monthlyPayment = principal * (monthlyInterest * mathPower / (mathPower - 1));
 
         String monthlyPaymentFormatted = NumberFormat.getCurrencyInstance().format(monthlyPayment);
-        // Print the result
+        // Print the result(monthlyPaymentFormatted)
         System.out.print(monthlyPaymentFormatted);
     }
 }
