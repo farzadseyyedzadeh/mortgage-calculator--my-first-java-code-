@@ -1,28 +1,36 @@
-import java.util.Scanner;
 import java.text.NumberFormat;
+import java.util.Scanner;
 
 public class App {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        double principle = readInput("Principle", 1_000, 1_000_000);
+        float annualInterestRate = (float) readInput("Annual Interest Rate", 1, 30);
+        byte years = (byte) readInput("Period (Years)", 1, 30);
+        double mortgage = calculateMortgage(principle, annualInterestRate, years);
+        System.out.println(NumberFormat.getCurrencyInstance().format(mortgage));
+    }
+
+    public static double readInput(String prompt, double min, double max) {
         Scanner scanner = new Scanner(System.in);
-        // Principal
-        System.out.print("Principal:");
-        int principal = scanner.nextInt();
-        // Interest rate
-        System.out.print("Annual Interest(percent): ");
-        double annualInterest = scanner.nextDouble();
-        double monthlyInterest = annualInterest / 12 / 100;
-        // Period
-        System.out.print("Period (Years): ");
-        int years = scanner.nextInt();
-        int numberOfPayments = years * 12;
+        double value;
+        while (true) {
+            System.out.print(prompt + ": ");
+            value = scanner.nextDouble();
+            if (value >= min && value <= max)
+                break;
+            System.out.println(prompt + " must be between " + min + " and " + max);
+        }
+        return value;
+    }
 
-        scanner.close();
-        // Calculate the monthly payment
-        double mathPower = Math.pow(1 + monthlyInterest, numberOfPayments);
-        double monthlyPayment = principal * (monthlyInterest * mathPower / (mathPower - 1));
-
-        String monthlyPaymentFormatted = NumberFormat.getCurrencyInstance().format(monthlyPayment);
-        // Print the result(monthlyPaymentFormatted)
-        System.out.print(monthlyPaymentFormatted);
+    public static double calculateMortgage(double principle, float annualInterestRate, byte years) {
+        final byte NUMBER_OF_MONTH = 12;
+        final byte PERCENT = 100;
+        double monthlyInterestRate = annualInterestRate / NUMBER_OF_MONTH / PERCENT;
+        int numberOfPayments = years * NUMBER_OF_MONTH;
+        double mortgage = principle *
+                (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments)) /
+                (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+        return mortgage;
     }
 }
